@@ -1,0 +1,20 @@
+- name: Get subnet UUID
+  shell: > 
+    source /home/stack/stackrc && neutron subnet-list | grep -Pi "\d" | awk '{print $2}'
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  register: subnet_uuid
+
+# - debug: "msg={{ subnet_uuid.stdout }}"
+
+- name: Set subnet DNS
+  shell: > 
+    source /home/stack/stackrc && neutron subnet-update {{ subnet_uuid.stdout }} --dns-nameserver {{ dns_server }}
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  register: subnet_uuid
+

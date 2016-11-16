@@ -1,0 +1,13 @@
+---
+- hosts: undercloud
+  vars_files:
+    - vars/instack.yml
+    - vars/undercloud.yml
+    - vars/network.yml
+  tasks: []
+  roles:
+    # - { role: undercloud }
+    # - { role: build_images }
+    # - { role: instackenv }
+    # - { role: dns }
+    - { role: overcloud_deploy }

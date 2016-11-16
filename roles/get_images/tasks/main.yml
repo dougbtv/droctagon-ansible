@@ -1,0 +1,11 @@
+---
+
+# http://buildlogs.centos.org/centos/7/cloud/x86_64/tripleo_images/mitaka/delorean/
+# http://buildlogs.centos.org/centos/7/cloud/x86_64/tripleo_images/liberty/delorean/
+
+# - name: Ensure file for images exists
+
+- name:  Enable latest RDO Delorean repository for all packages for specific version
+  get_url: 
+    url: "https://trunk.rdoproject.org/centos7-{{ osp_version }}/current/delorean.repo"
+    dest: "/etc/yum.repos.d/delorean-{{ osp_version }}.repo"

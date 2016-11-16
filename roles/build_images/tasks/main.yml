@@ -1,0 +1,19 @@
+---
+
+- name: Build overcloud images
+  shell: "source /home/stack/stackrc && openstack overcloud image build --all"
+  args: 
+    chdir: "/home/stack"
+    creates: "/home/stack/overcloud-full.qcow2"
+  become: true
+  become_user: stack
+  environment:
+    DELOREAN_TRUNK_REPO: "http://trunk.rdoproject.org/centos7-{{ osp_version }}/current/"
+    DIB_YUM_REPO_CONF: "/etc/yum.repos.d/delorean-deps-{{ osp_version }}.repo /etc/yum.repos.d/delorean-{{ osp_version }}.repo /etc/yum.repos.d/CentOS-Ceph-Hammer.repo"
+
+- name: Upload images
+  shell: "source /home/stack/stackrc && openstack overcloud image upload"
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack

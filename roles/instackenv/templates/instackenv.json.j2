@@ -1,0 +1,21 @@
+{
+    "nodes": [
+        {% for instack in instacklist %}{
+            "pm_type":"pxe_ipmitool",
+            "mac":[
+                "{{ instack.mac }}"
+            ],
+            "cpu":"{{ instack.cpu }}",
+            "memory":"{{ instack.memory }}",
+            "disk":"{{ instack.disk }}",
+            "arch":"{{ instack.arch }}",
+            "pm_user":"{{ instack.pm_user }}",
+            "pm_password":"{{ instack.pm_password }}",
+            {% if instack.capabilities is defined %}"capabilities": "{{ instack.capabilities }}",
+            {% endif %}
+            "pm_addr":"{{ instack.pm_addr }}"
+        }{% if not loop.last %},
+        {% endif %}
+        {% endfor %}
+    ]
+}

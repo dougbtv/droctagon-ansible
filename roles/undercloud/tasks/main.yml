@@ -1,0 +1,134 @@
+---
+
+# ------------------------------------------------------------------------------------------------------
+# For your reference...
+# http://docs.openstack.org/developer/tripleo-docs/basic_deployment/basic_deployment_cli.html
+#
+# ------------------------------------------------------------------------------------------------------
+
+- name: Set hostname
+  hostname: 
+    name: "{{ undercloud_hostname }}"
+
+- name: Install packages
+  yum: 
+    name: "{{ item }}"
+    state: present
+  with_items: 
+    - yum-utils
+    - tcpdump
+    - libselinux-python
+    - epel-release
+    # - python-pip
+
+- name: Create stack user
+  user: 
+    name: stack 
+    comment: "infamous openstack stack user"
+
+- name: set sudoers.d file
+  copy: 
+    src: sudoers.stack
+    dest: /etc/sudoers.d/stack
+    mode: 0444
+
+# ---------------------------- STABLE REPOS.
+
+- name:  Enable latest RDO Delorean repository for all packages for specific version
+  get_url: 
+    url: "https://trunk.rdoproject.org/centos7-{{ osp_version }}/current/delorean.repo"
+    dest: "/etc/yum.repos.d/delorean-{{ osp_version }}.repo"
+
+- name: Enable the Delorean Deps repository
+  get_url:
+    url: "http://trunk.rdoproject.org/centos7-{{ osp_version }}/delorean-deps.repo"
+    dest: "/etc/yum.repos.d/delorean-deps-{{ osp_version }}.repo"
+
+- name: Enable the CentOS Storage SIG Ceph/Hammer repository for deploying Ceph
+  yum: 
+    name: centos-release-ceph-hammer 
+    enablerepo: extras 
+    state: present
+  register: install_ceph_hammer
+
+- name: Disable gpg check in ceph/hammer repo
+  command: >
+    sed -i -e 's%gpgcheck=.*%gpgcheck=0%' /etc/yum.repos.d/CentOS-Ceph-Hammer.repo
+  when: install_ceph_hammer.changed
+
+- name: Install the yum-plugin-priorities package 
+  yum: 
+    name: yum-plugin-priorities
+    state: present
+
+- name: "Install the TripleO CLI (this pulls other deps, as you would imagine)"
+  yum: 
+    name: python-tripleoclient
+    state: present
+
+- name: Template undercloud.conf
+  template:
+    src: "{{ osp_version }}.undercloud.conf.j2"
+    dest: "/home/stack/undercloud.conf"
+
+- name: Install undercloud
+  command: openstack undercloud install
+  args:
+    creates: /home/stack/.undercloud_installed
+  become: true
+  become_user: stack
+
+- name: Mark undercloud install complete
+  file: 
+    path: /home/stack/.undercloud_installed 
+    state: directory
+  become: true
+  become_user: stack
+
+# ----------------------------------------------------------------------- MOST RECENT
+# --
+# -- NOTE! You either want stable, OR most recent.
+# -- I've read that incorrectly in the docs a number of times now.
+# --
+# ----------------------------------------------------------------------- MOST RECENT
+
+# Experiment, remove this? We specify stable specifically?
+# From docs: "Do not enable any other repos not explicitly marked for that release."
+# - name: Enable last known good RDO trunk delorean repo
+#   get_url:
+#     url: http://buildlogs.centos.org/centos/7/cloud/x86_64/rdo-trunk-master-tripleo/delorean.repo
+#     dest: /etc/yum.repos.d/delorean.repo 
+#   register: last_known_good_trunk
+
+# experiment: keep this removed.
+# - name: EXPERIMENT - Change repo name to delorean-current
+#   command: >
+#     sed -i 's/\[delorean\]/\[delorean-trunk\]/' /etc/yum.repos.d/delorean.repo
+#   when: last_known_good_trunk.changed
+
+# Error: Package: puppet-opendaylight-3.7.0-0.20161115172553.e25308d.el7.centos.noarch (delorean-current)\n           Requires: puppet >= 2.7.0
+# Error: Package: 1:python-keystoneclient-2.3.2-0.20160707105058.8f872e9.el7.centos.noarch (delorean)\n           Requires: python-positional >= 1.0.1
+
+# - name: Enable latest RDO Trunk Delorean repository only for the TripleO packages
+#   get_url:
+#     url: http://trunk.rdoproject.org/centos7/current/delorean.repo
+#     dest: /etc/yum.repos.d/delorean-current.repo
+#   register: enable_rdotrunk_delorean
+
+# - name: Change repo name to delorean-current
+#   command: >
+#     sed -i 's/\[delorean\]/\[delorean-current\]/' /etc/yum.repos.d/delorean-current.repo
+#   when: enable_rdotrunk_delorean.changed
+
+# - name: Set tripleo includepkgs in delorean-current repo
+#   lineinfile:
+#     dest: /etc/yum.repos.d/delorean-current.repo
+#     regexp: "includepkgs"
+#     line: >
+#       includepkgs=diskimage-builder,instack,instack-undercloud,os-apply-config,os-cloud-config,
+#       os-collect-config,os-net-config,os-refresh-config,python-tripleoclient,openstack-tripleo-common,
+#       openstack-tripleo-heat-templates,openstack-tripleo-image-elements,openstack-tripleo,
+#       openstack-tripleo-puppet-elements,openstack-puppet-modules,puppet-*
+#   when: enable_rdotrunk_delorean.changed
+
+# ----------------------------------------------------------------------- end MOST RECENT
