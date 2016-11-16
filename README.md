@@ -15,4 +15,4 @@ It's a cluster of 8 nodes (hence `oct-` prefix) and it's namesake is the Kool Ke
 
 ## Using the playbooks
 
-"Coming soon" 
+"Coming soon"
