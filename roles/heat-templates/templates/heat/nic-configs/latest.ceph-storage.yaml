@@ -2,7 +2,7 @@ heat_template_version: 2015-04-30
 
 description: >
   Software Config to drive os-net-config to configure VLANs for the
-  compute role.
+  ceph storage role.
 parameters:
   ControlPlaneIp:
     default: ''
@@ -32,17 +32,13 @@ parameters:
     default: ''
     description: IP address/subnet on the management network
     type: string
-  InternalApiNetworkVlanID:
-    default: 20
-    description: Vlan ID for the internal_api network traffic.
-    type: number
   StorageNetworkVlanID:
     default: 30
     description: Vlan ID for the storage network traffic.
     type: number
-  TenantNetworkVlanID:
-    default: 50
-    description: Vlan ID for the tenant network traffic.
+  StorageMgmtNetworkVlanID:
+    default: 40
+    description: Vlan ID for the storage mgmt network traffic.
     type: number
   ManagementNetworkVlanID:
     default: 60
@@ -81,7 +77,7 @@ resources:
           network_config:
             -
               type: ovs_bridge
-              name: {get_input: bridge_name}
+              name: br-storage
               use_dhcp: false
               dns_servers: {get_param: DnsServers}
               addresses:
@@ -104,7 +100,32 @@ resources:
                   name: nic1
                   # force the MAC address of the bridge to this interface
                   primary: true
-                  
+                -
+                  type: vlan
+                  vlan_id: {get_param: StorageNetworkVlanID}
+                  addresses:
+                    -
+                      ip_netmask: {get_param: StorageIpSubnet}
+                -
+                  type: vlan
+                  vlan_id: {get_param: StorageMgmtNetworkVlanID}
+                  addresses:
+                    -
+                      ip_netmask: {get_param: StorageMgmtIpSubnet}
+                # Uncomment when including environments/network-management.yaml
+                # If setting default route on the Management interface, comment
+                # out the default route on the Control Plane.
+                #-
+                #  type: vlan
+                #  vlan_id: {get_param: ManagementNetworkVlanID}
+                #  addresses:
+                #    -
+                #      ip_netmask: {get_param: ManagementIpSubnet}
+                #  routes:
+                #    -
+                #      default: true
+                #      next_hop: {get_param: ManagementInterfaceDefaultRoute}
+
 outputs:
   OS::stack_id:
     description: The OsNetConfigImpl resource.

@@ -2,7 +2,7 @@ heat_template_version: 2015-04-30
 
 description: >
   Software Config to drive os-net-config to configure VLANs for the
-  compute role.
+  controller role.
 parameters:
   ControlPlaneIp:
     default: ''
@@ -32,6 +32,10 @@ parameters:
     default: ''
     description: IP address/subnet on the management network
     type: string
+  ExternalNetworkVlanID:
+    default: 10
+    description: Vlan ID for the external network traffic.
+    type: number
   InternalApiNetworkVlanID:
     default: 20
     description: Vlan ID for the internal_api network traffic.
@@ -39,6 +43,10 @@ parameters:
   StorageNetworkVlanID:
     default: 30
     description: Vlan ID for the storage network traffic.
+    type: number
+  StorageMgmtNetworkVlanID:
+    default: 40
+    description: Vlan ID for the storage mgmt network traffic.
     type: number
   TenantNetworkVlanID:
     default: 50
@@ -48,20 +56,20 @@ parameters:
     default: 60
     description: Vlan ID for the management network traffic.
     type: number
-  ControlPlaneSubnetCidr: # Override this via parameter_defaults
-    default: '24'
-    description: The subnet CIDR of the control plane network.
-    type: string
   ControlPlaneDefaultRoute: # Override this via parameter_defaults
     description: The default route of the control plane network.
     type: string
-  ExternalInterfaceDefaultRoute: # Not used by default in this template
+  ExternalInterfaceDefaultRoute:
     default: '10.0.0.1'
-    description: The default route of the external network.
+    description: default route for the external network
     type: string
   ManagementInterfaceDefaultRoute: # Commented out by default in this template
     default: unset
     description: The default route of the management network.
+    type: string
+  ControlPlaneSubnetCidr: # Override this via parameter_defaults
+    default: '24'
+    description: The subnet CIDR of the control plane network.
     type: string
   DnsServers: # Override this via parameter_defaults
     default: []
@@ -95,16 +103,61 @@ resources:
                 -
                   ip_netmask: 169.254.169.254/32
                   next_hop: {get_param: EC2MetadataIp}
-                -
-                  default: true
-                  next_hop: {get_param: ControlPlaneDefaultRoute}
               members:
                 -
                   type: interface
                   name: nic1
                   # force the MAC address of the bridge to this interface
                   primary: true
-                  
+                -
+                  type: vlan
+                  vlan_id: {get_param: ExternalNetworkVlanID}
+                  addresses:
+                  -
+                    ip_netmask: {get_param: ExternalIpSubnet}
+                  routes:
+                    -
+                      default: true
+                      next_hop: {get_param: ExternalInterfaceDefaultRoute}
+                -
+                  type: vlan
+                  vlan_id: {get_param: InternalApiNetworkVlanID}
+                  addresses:
+                    -
+                      ip_netmask: {get_param: InternalApiIpSubnet}
+                -
+                  type: vlan
+                  vlan_id: {get_param: StorageNetworkVlanID}
+                  addresses:
+                    -
+                      ip_netmask: {get_param: StorageIpSubnet}
+                -
+                  type: vlan
+                  vlan_id: {get_param: StorageMgmtNetworkVlanID}
+                  addresses:
+                    -
+                      ip_netmask: {get_param: StorageMgmtIpSubnet}
+                -
+                  type: vlan
+                  vlan_id: {get_param: TenantNetworkVlanID}
+                  addresses:
+                    -
+                      ip_netmask: {get_param: TenantIpSubnet}
+                # Uncomment when including environments/network-management.yaml
+                # If setting default route on the Management interface, comment
+                # out the default route on the External interface. This will
+                # make the External API unreachable from remote subnets.
+                #-
+                #  type: vlan
+                #  vlan_id: {get_param: ManagementNetworkVlanID}
+                #  addresses:
+                #    -
+                #      ip_netmask: {get_param: ManagementIpSubnet}
+                #  routes:
+                #    -
+                #      default: true
+                #      next_hop: {get_param: ManagementInterfaceDefaultRoute}
+
 outputs:
   OS::stack_id:
     description: The OsNetConfigImpl resource.

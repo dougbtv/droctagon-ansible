@@ -9,9 +9,9 @@ The templates also specify the external/public API access on a
 dedicated flat network on the controller, using the standard br-ex
 bridge name. The configurations assume the following-
 
-**eth0/nic1** is PXE/management (ctlplane)
+**eth0/nic2** is PXE/management (ctlplane)
 
-**eth1/nic2** is a trunked VLAN interface
+**eth1/nic1** is a trunked VLAN interface
 
 **eth2/nic3** is the public API/external network on the native VLAN (flat)
 
