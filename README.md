@@ -15,4 +15,7 @@ It's a cluster of 8 nodes (hence `oct-` prefix) and it's namesake is the Kool Ke
 
 ## Using the playbooks
 
-"Coming soon"
+
+## Isolating networks
+
+We're going to follow [these triplo docs](http://docs.openstack.org/developer/tripleo-docs/advanced_deployment/network_isolation.html)

@@ -1,0 +1,21 @@
+---
+
+- name: Create "my template" directory and subdirs
+  file: 
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /home/stack/my_templates/
+    - /home/stack/my_templates/nic-configs/
+
+- name: Template primary advanced networking template
+  template:
+    src: heat/advanced-networking.yaml.j2
+    dest: /home/stack/my_templates/advanced-networking.yaml
+
+- name: create nic configs from templates
+  template:
+    src: "{{ item }}"
+    dest: /home/stack/my_templates/nic-configs/{{ item | basename | regex_replace('\.j2','') }}
+  with_fileglob:
+    - ../templates/heat/nic-configs/*.j2
