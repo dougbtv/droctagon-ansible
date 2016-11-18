@@ -16,13 +16,47 @@ resource_registry:
 # the names of top level and role level parameters with the role name and a
 # version. Using parameter_defaults makes it such that if the parameter name is
 # not defined in the template, we don't get an error.
+
+# the 10.0.1.0 and 192.168.1.0 networks are the management and external networks (respectively)
 parameter_defaults:
-  # This sets 'external_network_bridge' in l3_agent.ini to an empty string
-  # so that external networks act like provider bridge networks (they
-  # will plug into br-int instead of br-ex)
-  NeutronExternalNetworkBridge: "br-ex"
+  # This section is where deployment-specific configuration is done
+  # CIDR subnet mask length for provisioning network
+  ControlPlaneSubnetCidr: '24'
+  # Gateway router for the provisioning network (or Undercloud IP)
+  ControlPlaneDefaultRoute: 10.0.1.1
+  EC2MetadataIp: 10.0.1.10  # Generally the IP of the Undercloud
+  # Customize the IP subnets to match the local environment
+  InternalApiNetCidr: 172.17.0.0/24
+  StorageNetCidr: 172.18.0.0/24
+  StorageMgmtNetCidr: 172.19.0.0/24
+  TenantNetCidr: 172.16.0.0/24
   ExternalNetCidr: 192.168.1.0/24
+  # Customize the VLAN IDs to match the local environment
+  InternalApiNetworkVlanID: 20
+  StorageNetworkVlanID: 30
+  StorageMgmtNetworkVlanID: 40
+  TenantNetworkVlanID: 50
+  ExternalNetworkVlanID: 100
+  # Customize the IP ranges on each network to use for static IPs and VIPs
+  InternalApiAllocationPools: [{'start': '172.17.0.10', 'end': '172.17.0.200'}]
+  StorageAllocationPools: [{'start': '172.18.0.10', 'end': '172.18.0.200'}]
+  StorageMgmtAllocationPools: [{'start': '172.19.0.10', 'end': '172.19.0.200'}]
+  TenantAllocationPools: [{'start': '172.16.0.10', 'end': '172.16.0.200'}]
+  # Leave room if the external network is also used for floating IPs
   ExternalAllocationPools: [{'start': '192.168.1.150', 'end': '192.168.1.180'}]
+  # Gateway router for the external network
   ExternalInterfaceDefaultRoute: 192.168.1.1
-  EC2MetadataIp: 20.0.1.1
-  ControlPlaneDefaultRoute: 20.0.1.1
+  # Uncomment if using the Management Network (see network-management.yaml)
+  #ManagementNetCidr: 10.0.1.0/24
+  #ManagementAllocationPools: [{'start': '10.0.1.80', 'end', '10.0.1.99'}]
+  #ManagementSubnet: 10.0.1.0/24
+  # Use either this parameter or ControlPlaneDefaultRoute in the NIC templates
+  #ManagementInterfaceDefaultRoute: 10.0.1.1
+  # Define the DNS servers (maximum 2) for the overcloud nodes
+  DnsServers: ["8.8.8.8","8.8.4.4"]
+  # Set to empty string to enable multiple external networks or VLANs
+  NeutronExternalNetworkBridge: "''"
+  # The tunnel type for the tenant network (vxlan or gre). Set to '' to disable tunneling.
+  NeutronTunnelTypes: 'vxlan'
+  # Customize bonding options, e.g. "mode=4 lacp_rate=1 updelay=1000 miimon=100"
+  BondInterfaceOvsOptions: "bond_mode=active-backup"
