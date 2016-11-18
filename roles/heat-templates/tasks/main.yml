@@ -1,5 +1,25 @@
 ---
 
+# - name: Rsync /usr/share/openstack-tripleo-heat-templates
+#   synchronize: 
+#     src: /usr/share/openstack-tripleo-heat-templates
+#     dest: /home/stack/my_templates/
+#   # become: true
+#   # become_user: stack
+#   become_user: False
+
+- name: Clear our my_templates
+  file:
+    path: /home/stack/my_templates
+    state: absent
+
+
+- name: Force copy /usr/share/openstack-tripleo-heat-templates
+  command: >
+    cp -R /usr/share/openstack-tripleo-heat-templates /home/stack/my_templates/
+  become: true
+  become_user: stack
+
 - name: Create "my template" directory and subdirs
   file: 
     path: "{{ item }}"
@@ -7,11 +27,22 @@
   with_items:
     - /home/stack/my_templates/
     - /home/stack/my_templates/nic-configs/
+  become: true
+  become_user: stack
 
-- name: Template primary advanced networking template
+- name: Template network-environment
   template:
-    src: heat/advanced-networking.yaml.j2
-    dest: /home/stack/my_templates/advanced-networking.yaml
+    src: heat/network-environment.yaml.j2
+    dest: /home/stack/my_templates/network-environment.yaml
+  become: true
+  become_user: stack
+
+- name: Template network-isolation
+  template:
+    src: heat/network-isolation.yaml.j2
+    dest: /home/stack/my_templates/network-isolation.yaml
+  become: true
+  become_user: stack
 
 - name: create nic configs from templates
   template:
@@ -19,3 +50,5 @@
     dest: /home/stack/my_templates/nic-configs/{{ item | basename | regex_replace('\.j2','') }}
   with_fileglob:
     - ../templates/heat/nic-configs/*.j2
+  become: true
+  become_user: stack

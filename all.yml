@@ -6,8 +6,9 @@
     - vars/network.yml
   tasks: []
   roles:
-    # - { role: undercloud }
-    # - { role: build_images }
-    # - { role: instackenv }
-    # - { role: dns }
-    - { role: overcloud_deploy }
+    - { role: undercloud }
+    - { role: build_images }
+    - { role: instackenv }
+    - { role: dns }
+    - { role: heat-templates }
+    # - { role: overcloud_deploy }
