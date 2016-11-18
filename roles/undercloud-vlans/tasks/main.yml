@@ -1,0 +1,22 @@
+---
+
+- name: template vlan nic configs for undercloud
+  template: 
+    src: "vlan{{ item }}.j2"
+    dest: "/etc/sysconfig/network-scripts/ifcfg-enp1s0f1.{{ item }}"
+  with_items:
+    - 20
+    - 30
+    - 40
+    - 50
+    - 100
+
+- name: make sure each vlan interface is ifup
+  command: >
+    ifup enp1s0f1.{{ item }}
+  with_items:
+    - 20
+    - 30
+    - 40
+    - 50
+    - 100
