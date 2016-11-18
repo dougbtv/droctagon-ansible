@@ -11,6 +11,21 @@
     DELOREAN_TRUNK_REPO: "http://trunk.rdoproject.org/centos7-{{ osp_version }}/current/"
     DIB_YUM_REPO_CONF: "/etc/yum.repos.d/delorean-deps-{{ osp_version }}.repo /etc/yum.repos.d/delorean-{{ osp_version }}.repo /etc/yum.repos.d/CentOS-Ceph-Hammer.repo"
 
+
+# - name: Start libvirtd
+#   service:
+#     name: libvirtd
+#     state: started
+
+# # semi hint from here: https://paste.fedoraproject.org/315820/
+# # which includes:
+# #    openstack overcloud image upload --update-existing
+# # when you're doing a customization after the fact.
+# - name: Customize image DANGEROUS - SETTING ROOT PASSWORD. (for troubleshooting....)
+#   command: virt-customize -a /home/stack/overcloud-full.qcow2 --root-password password:redhatz
+#   become: true
+#   become_user: stack
+
 - name: Upload images
   shell: "source /home/stack/stackrc && openstack overcloud image upload"
   args: 

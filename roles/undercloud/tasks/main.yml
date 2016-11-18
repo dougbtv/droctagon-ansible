@@ -19,6 +19,8 @@
     - tcpdump
     - libselinux-python
     - epel-release
+    - libvirt
+    - libguestfs-tools
     # - python-pip
 
 - name: Create stack user
