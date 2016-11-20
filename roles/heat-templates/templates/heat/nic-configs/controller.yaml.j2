@@ -90,7 +90,7 @@ resources:
           network_config:
             -
               type: interface
-              name: nic1
+              name: nic2
               use_dhcp: false
               dns_servers: {get_param: DnsServers}
               defroute: no
@@ -112,49 +112,50 @@ resources:
               type: ovs_bridge
               name: {get_input: bridge_name}
               dns_servers: {get_param: DnsServers}
+              defroute: yes
               members:
                 -
                   type: interface
-                  name: nic2
+                  name: nic1
                   use_dhcp: true
                   # force the MAC address of the bridge to this interface
                   primary: true
                   addresses:
                   -
-                    ip_netmask: {get_param: ExternalIpSubnet}
+                    ip_netmask: 192.168.1.0
                   routes:
                     -
                       default: true
                       ip_netmask: 0.0.0.0/0
-                      next_hop: {get_param: ExternalInterfaceDefaultRoute}
+                      next_hop: 192.168.1.1
                 # -
                 #   type: vlan
-                #   device: nic2
+                #   device: nic1
                 #   vlan_id: {get_param: ExternalNetworkVlanID}
                 -
                   type: vlan
-                  device: nic2
+                  device: nic1
                   vlan_id: {get_param: InternalApiNetworkVlanID}
                   addresses:
                     -
                       ip_netmask: {get_param: InternalApiIpSubnet}
                 -
                   type: vlan
-                  device: nic2
+                  device: nic1
                   vlan_id: {get_param: StorageNetworkVlanID}
                   addresses:
                     -
                       ip_netmask: {get_param: StorageIpSubnet}
                 -
                   type: vlan
-                  device: nic2
+                  device: nic1
                   vlan_id: {get_param: StorageMgmtNetworkVlanID}
                   addresses:
                     -
                       ip_netmask: {get_param: StorageMgmtIpSubnet}
                 -
                   type: vlan
-                  device: nic2
+                  device: nic1
                   vlan_id: {get_param: TenantNetworkVlanID}
                   addresses:
 outputs:
