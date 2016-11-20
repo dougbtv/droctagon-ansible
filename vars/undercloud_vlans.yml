@@ -1,0 +1,4 @@
+undercloud_vlans:
+  - nic: enp1s0f1.20
+    vlanid: foo
+    ipaddr:  bar
