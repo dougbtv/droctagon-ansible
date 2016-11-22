@@ -129,6 +129,36 @@
   when: internal_network_created.changed
   register: internal_subnet_id
 
+- name: Check out default security rules
+  shell: > 
+    source /home/stack/overcloudrc && 
+    nova secgroup-list-rules default
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  register: secgroup_default_rules
+
+- name: Add SSH default rule
+  shell: > 
+    source /home/stack/overcloudrc && 
+    nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  when: secgroup_default_rules.stdout.find('22') == -1
+
+- name: Add ICMP default rule
+  shell: > 
+    source /home/stack/overcloudrc && 
+    nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  when: secgroup_default_rules.stdout.find('icmp') == -1
+
 # echo "Get undercloud subnet..."
 # source stackrc
 # subnet_cidr=$(neutron subnet-list | grep -P "\d" | perl -p -i -e 's|^.+\s([\d\.]+/\d+)\s.+$|$1|')
