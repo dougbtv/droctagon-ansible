@@ -1,0 +1,158 @@
+---
+
+- name: Look for external network in net list
+  shell: > 
+    source /home/stack/overcloudrc && 
+    neutron net-list | grep {{ overcloud_network.external_net_name }}
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  register: neutron_net_found
+  ignore_errors: true
+
+# - debug: "msg={{ neutron_net_found.rc }}"
+
+- name: Create external network.
+  shell: > 
+    source /home/stack/overcloudrc &&
+    neutron net-create {{ overcloud_network.external_net_name }}
+    --router:external
+    --provider:physical_network datacentre
+    --provider:network_type flat
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  when: neutron_net_found.rc != 0
+  register: external_network_created
+
+- name: Create external network subnet
+  shell: > 
+    source /home/stack/overcloudrc && \
+    neutron subnet-create {{ overcloud_network.external_net_name }} \
+      --name ext-subnet \
+      --allocation-pool \
+      start={{ overcloud_network.external_pool_start }},end={{ overcloud_network.external_pool_end }} \
+      --disable-dhcp \
+      --gateway {{ overcloud_network.external_gateway }}  \
+      {{ overcloud_network.external_cidr }}
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  when: external_network_created.changed
+
+- name: Look for router
+  shell: > 
+    source /home/stack/overcloudrc && 
+    neutron router-list | grep {{ overcloud_network.router_name }}
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  register: neutron_router_found
+  ignore_errors: true
+
+- name: Create router
+  shell: > 
+    source /home/stack/overcloudrc &&
+    neutron router-create {{ overcloud_network.router_name }}
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  when: neutron_router_found.rc != 0
+  register: router_created
+
+- name: Set router gateway
+  shell: > 
+    source /home/stack/overcloudrc && \
+    neutron router-gateway-set {{ overcloud_network.router_name }} {{ overcloud_network.external_net_name }}
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  when: router_created.changed
+
+- name: Look for internal network in net list
+  shell: > 
+    source /home/stack/overcloudrc && 
+    neutron net-list | grep {{ overcloud_network.internal_net_name }}
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  register: neutron_intnet_found
+  ignore_errors: true
+
+- name: Create internal network.
+  shell: > 
+    source /home/stack/overcloudrc &&
+    neutron net-create {{ overcloud_network.internal_net_name }}
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  when: neutron_intnet_found.rc != 0
+  register: internal_network_created
+
+- name: Create internal subnet.
+  shell: > 
+    source /home/stack/overcloudrc &&
+    neutron subnet-create {{ overcloud_network.internal_net_name }} {{ overcloud_network.internal_net_cidr }} --dns_nameservers list=true {{ overcloud_network.internal_net_dns }}
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  when: internal_network_created.changed
+
+- name: Get internal subnet id
+  shell: > 
+    source /home/stack/overcloudrc &&
+    neutron subnet-list | grep {{ overcloud_network.internal_net_cidr }} | awk '{print $2}'
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  when: internal_network_created.changed
+  register: internal_subnet_id
+
+- name: Add router internal interface
+  shell: > 
+    source /home/stack/overcloudrc &&
+    neutron router-interface-add {{ overcloud_network.router_name }} {{ internal_subnet_id.stdout }}
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+  when: internal_network_created.changed
+  register: internal_subnet_id
+
+# echo "Get undercloud subnet..."
+# source stackrc
+# subnet_cidr=$(neutron subnet-list | grep -P "\d" | perl -p -i -e 's|^.+\s([\d\.]+/\d+)\s.+$|$1|')
+# subnet_class_c=$(echo $subnet_cidr | perl -p -i -e 's|^(.+)\..+$|$1|')
+
+# echo "Create overcloud external subnet"
+
+# source ~/overcloudrc
+# 
+# neutron subnet-create {{ overcloud_network.external_net_name }} \
+#   --name ext-subnet \
+#   --allocation-pool \
+#   start=192.168.1.155,end=192.168.1.180 \
+#   --disable-dhcp \
+#   --gateway 192.168.1.1  \
+#   192.168.1.0/24
+
+
+# neutron router-create router1
+# neutron router-gateway-set router1 {{ overcloud_network.external_net_name }}
+
+# echo "Create overcloud internal (openshift) subnet"
+# neutron net-create int
+# neutron subnet-create int 30.0.0.0/24 --dns_nameservers list=true 8.8.8.8
+
+# internal_subnet_id=$(neutron subnet-list | grep 30.0.0.0/24 | awk '{print $2}')
+# neutron router-interface-add router1 $internal_subnet_id

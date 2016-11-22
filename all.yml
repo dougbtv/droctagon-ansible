@@ -12,5 +12,6 @@
     # - { role: instackenv }
     # - { role: dns }
     # - { role: undercloud-vlans }
-    - { role: heat-templates }
+    # - { role: heat-templates }
     # - { role: overcloud_deploy }
+    - { role: overcloud_networking }

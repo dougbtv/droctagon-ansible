@@ -1,1 +1,11 @@
 dns_server: 8.8.8.8
+overcloud_network:
+  external_net_name: "ext-net"
+  external_pool_start: 192.168.1.155
+  external_pool_end: 192.168.1.180
+  external_gateway: 192.168.1.1
+  external_cidr: 192.168.1.0/24
+  router_name: router1
+  internal_net_name: "int"
+  internal_net_cidr: 30.0.0.0/24
+  internal_net_dns: 8.8.8.8
