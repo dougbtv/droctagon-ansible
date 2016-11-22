@@ -131,6 +131,8 @@ resources:
               device: nic2
               vlan_id: {get_param: TenantNetworkVlanID}
               addresses:
+                -
+                  ip_netmask: {get_param: TenantIpSubnet}
 outputs:
   OS::stack_id:
     description: The OsNetConfigImpl resource.
