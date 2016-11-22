@@ -1,14 +1,16 @@
 # Default profile flavors: compute, control, swift-storage, ceph-storage,boot_option:local and block-storage
+
 instacklist: 
-  - pm_addr: 192.168.1.10 
-    mac: "00:25:90:49:55:C6"
-    cpu: 2
-    memory: 48130
-    disk: 1000
-    arch: x86_64
-    pm_user: stack
-    pm_password: redhatz
-    capabilities: "profile:ceph-storage,boot_option:local"
+  # ------------------------------- has network cable to backbone.
+  # - pm_addr: 192.168.1.10 
+  #   mac: "00:25:90:49:55:C6"
+  #   cpu: 2
+  #   memory: 48130
+  #   disk: 1000
+  #   arch: x86_64
+  #   pm_user: stack
+  #   pm_password: redhatz
+  #   capabilities: "profile:ceph-storage,boot_option:local"
 
   - pm_addr: 192.168.1.11 
     mac: "00:25:90:49:54:6C"
@@ -18,18 +20,21 @@ instacklist:
     arch: x86_64
     pm_user: stack
     pm_password: redhatz
-    capabilities: "profile:control,boot_option:local"
-
-  - pm_addr: 192.168.1.12 
-    mac: "00:25:90:49:54:6E"
-    cpu: 2
-    memory: 48130
-    disk: 64
-    arch: x86_64
-    pm_user: stack
-    pm_password: redhatz
+    # was extra control.
     capabilities: "profile:compute,boot_option:local"
 
+  # ------------------------------- didn't wanna boot one time, worth another try at some point.
+  # - pm_addr: 192.168.1.12 
+  #   mac: "00:25:90:49:54:6E"
+  #   cpu: 2
+  #   memory: 48130
+  #   disk: 64
+  #   arch: x86_64
+  #   pm_user: stack
+  #   pm_password: redhatz
+  #   capabilities: "profile:compute,boot_option:local"
+
+  # ------------------------------- undercloud.
   # - pm_addr: 192.168.1.13 
   #   mac: "00:25:90:2F:03:DC"
   #   cpu: 2
@@ -59,15 +64,16 @@ instacklist:
     pm_password: redhatz
     capabilities: "profile:control,boot_option:local"
 
-  - pm_addr: 192.168.1.16 
-    mac: "00:25:90:48:B8:44"
-    cpu: 2
-    memory: 48130
-    disk: 64
-    arch: x86_64
-    pm_user: stack
-    pm_password: redhatz
-    capabilities: "profile:compute,boot_option:local"
+  # ---------------------------------- bad cable on external port?
+  # - pm_addr: 192.168.1.16 
+  #   mac: "00:25:90:48:B8:44"
+  #   cpu: 2
+  #   memory: 48130
+  #   disk: 64
+  #   arch: x86_64
+  #   pm_user: stack
+  #   pm_password: redhatz
+  #   capabilities: "profile:compute,boot_option:local"
 
   - pm_addr: 192.168.1.17 
     mac: "00:25:90:49:55:A6"
