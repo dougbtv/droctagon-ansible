@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Definitions....
-EXTERNAL_SUBNET_NAME=ext-net
-INTERNAL_SUBNET_NAME=int
-ROUTER_NAME=router1
-POOL_START=100
-POOL_END=120
-INTERNAL_CIDR=30.0.0.0/24
-DNS_SERVERS=8.8.8.8
+# EXTERNAL_SUBNET_NAME=ext-net
+# INTERNAL_SUBNET_NAME=int
+# ROUTER_NAME=router1
+# POOL_START=100
+# POOL_END=120
+# INTERNAL_CIDR=30.0.0.0/24
+# DNS_SERVERS=8.8.8.8
 
 echo "Get undercloud subnet..."
 source stackrc
