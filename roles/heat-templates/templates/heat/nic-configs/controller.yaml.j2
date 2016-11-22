@@ -89,7 +89,7 @@ resources:
           network_config:
             -
               type: interface
-              name: nic2
+              name: enp1s0f0
               use_dhcp: false
               defroute: no
               addresses:
@@ -120,7 +120,7 @@ resources:
               members:
                 -
                   type: interface
-                  name: nic2
+                  name: enp1s0f1
                   # force the MAC address of the bridge to this interface
                   primary: true
                 -
