@@ -84,3 +84,6 @@ instacklist:
     pm_user: stack
     pm_password: redhatz
     capabilities: "profile:compute,boot_option:local"
+    # This box has a USB stick in here, so we need to specify the root device.
+    # Here I use the serial number.
+    root_device: PNY39162193120100CF2

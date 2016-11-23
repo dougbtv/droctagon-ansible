@@ -8,6 +8,8 @@
             "cpu":"{{ instack.cpu }}",
             "memory":"{{ instack.memory }}",
             "disk":"{{ instack.disk }}",
+            {% if instack.root_device is defined %}"root_device": {"serial": "{{ instack.root_device }}"},
+            {% endif %}
             "arch":"{{ instack.arch }}",
             "pm_user":"{{ instack.pm_user }}",
             "pm_password":"{{ instack.pm_password }}",

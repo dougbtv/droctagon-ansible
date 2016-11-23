@@ -15,7 +15,7 @@
   pause: seconds=30
 
 - name: Baremetal configure boot.
-  shell: "source /home/stack/stackrc && openstack baremetal configure boot"
+  shell: "source /home/stack/stackrc && openstack baremetal configure boot --root-device-minimum-size 40"
   args: 
     chdir: "/home/stack"
   become: true
