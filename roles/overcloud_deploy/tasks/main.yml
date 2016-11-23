@@ -1,7 +1,13 @@
 ---
 
+# need to add...
+# --neutron-network-type vxlan
+# --neutron-tunnel-types vxlan
+# --ntp-server pool.ntp.org
+# --libvirt-type kvm
 - name: Dun dun dunnnnnnnn DEPLOY THE OVERCLOUD.
   shell: > 
+    set -o pipefail && 
     source /home/stack/stackrc && 
     openstack overcloud deploy
        --control-flavor control --compute-flavor compute --ceph-storage-flavor ceph-storage
@@ -9,7 +15,7 @@
        -e ~/my_templates/network-environment.yaml
        -e ~/my_templates/environments/network-isolation.yaml
        --compute-scale 1
-       --control-scale 1
+       --control-scale 1 | tee /tmp/overcloud_deploy.log
   args: 
     chdir: "/home/stack"
   become: true
