@@ -89,7 +89,7 @@ resources:
           network_config:
             -
               type: interface
-              name: enp1s0f0
+              name: {{ baremetal_network.nic1 }}
               use_dhcp: false
               defroute: no
               addresses:
@@ -120,7 +120,7 @@ resources:
               members:
                 -
                   type: interface
-                  name: enp1s0f1
+                  name: {{ baremetal_network.nic2 }}
                   # force the MAC address of the bridge to this interface
                   primary: true
                 -

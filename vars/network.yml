@@ -1,4 +1,14 @@
 dns_server: 8.8.8.8
+baremetal_network:
+    external_bridge_name: br-ex
+    external_net_cidr: 192.168.1.0/24
+    external_pool_start: 192.168.1.150
+    external_pool_end: 192.168.1.180
+    external_default_route: 192.168.1.1
+    control_plan_default_route: 10.0.1.10
+    ec2_metadata_ip: 10.0.1.10
+    nic1: enp1s0f0
+    nic2: enp1s0f1
 overcloud_network:
   external_net_name: "ext-net"
   external_pool_start: 192.168.1.155

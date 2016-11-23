@@ -20,9 +20,9 @@ parameter_defaults:
   # This sets 'external_network_bridge' in l3_agent.ini to an empty string
   # so that external networks act like provider bridge networks (they
   # will plug into br-int instead of br-ex)
-  NeutronExternalNetworkBridge: "br-ex"
-  ExternalNetCidr: 192.168.1.0/24
-  ExternalAllocationPools: [{'start': '192.168.1.150', 'end': '192.168.1.180'}]
-  ExternalInterfaceDefaultRoute: 192.168.1.1
-  ControlPlaneDefaultRoute: 10.0.1.10
-  EC2MetadataIp: 10.0.1.10
+  NeutronExternalNetworkBridge: "{{ baremetal_network.external_bridge_name }}"
+  ExternalNetCidr: {{ baremetal_network.external_net_cidr }}
+  ExternalAllocationPools: [{'start': '{{ baremetal_network.external_pool_start }}', 'end': '{{ baremetal_network.external_pool_end }}'}]
+  ExternalInterfaceDefaultRoute: {{ baremetal_network.external_default_route }}
+  ControlPlaneDefaultRoute: {{ baremetal_network.control_plan_default_route }}
+  EC2MetadataIp: {{ baremetal_network.ec2_metadata_ip }}
