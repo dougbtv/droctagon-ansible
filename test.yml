@@ -1,0 +1,26 @@
+---
+- hosts: undercloud
+  vars_files:
+    - vars/instack.yml
+    - vars/undercloud.yml
+    - vars/network.yml
+    - vars/undercloud_vlans.yml
+  tasks:
+    - name: Set a variable
+      set_fact:
+        target_string: "fest"
+
+    - name: Get some stdout
+      command: echo "testing 123\nturd"
+      register: test_output
+
+    - debug: msg={{ target_string }}
+    - debug: msg={{ test_output.stdout }}
+
+    - name: This never happens with a variable for find
+      command: echo "do something when"
+      when: "test_output.stdout.find('{{ target_string }}') != -1"
+
+    - name: This always happens when a literal string
+      command: echo "do something when"
+      when: "test_output.stdout.find('test') != -1"

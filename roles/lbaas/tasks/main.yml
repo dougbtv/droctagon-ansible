@@ -1,0 +1,7 @@
+---
+
+- name: Copy local ssh key to undercloud
+- name: Get overcloud controller IPs
+- name: SSH copy-id to overcloud controller
+- name: Add overcloud controller to hosts
+- name: 
