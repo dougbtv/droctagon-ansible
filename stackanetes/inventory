@@ -1,0 +1,4 @@
+openshiftaio ansible_ssh_host=192.168.122.40 ansible_ssh_user=root
+
+[allinone]
+openshiftaio

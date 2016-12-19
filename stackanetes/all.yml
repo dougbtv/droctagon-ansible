@@ -1,0 +1,9 @@
+---
+- hosts: allinone
+  vars_files:
+    - vars/main.yml
+  tasks: []
+  roles:
+    - { role: docker-install }
+    - { role: kpm-install, kpm_version: "v0.21.2" }
+    # - { role: openshift-install }
