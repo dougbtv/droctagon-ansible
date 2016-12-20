@@ -1,0 +1,57 @@
+# DNS is flux0red with `oc cluster up` you can't resolve cluster IP addresses.
+---
+
+- name: Get projects
+  shell: >
+    oc projects -q
+  register: oc_projects
+
+- name: Fail when there's no kpm registry project
+  fail:
+    msg: This play requires that the kpm registry project is running already.
+  when: "'kpm' not in oc_projects.stdout"
+
+- name: Install facter
+  yum:
+    name: facter
+    state: present
+
+- name: Get IP address with facter
+  shell: >
+    facter {{ facter_ipaddress }}
+  register: facter_result
+
+- name: Set IP address as fact
+  set_fact: 
+    main_ip_address: "{{ facter_result.stdout}}"
+
+# - debug: "msg={{ main_ip_address }}"
+
+- name: Template resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+
+- name: Always switch to kpm namespace
+  command: >
+    oc project kpm
+
+- name: Get kpm registry pod name
+  shell: >
+    oc get pods | awk '/kpm-registry/ {print $1}'
+  register: kpm_pod_name
+
+- name: Get kpm cluster URL
+  shell: >
+    oc describe pod {{ kpm_pod_name.stdout }} | grep KPM_URI | awk '{print $2}' | perl -p -i -e 's|^https?://(.+)$|$1|'
+  register: kpm_cluster_url
+
+# - debug: "msg={{ kpm_cluster_url }}"
+
+- name: nslookup google to make sure it can be found
+  shell: >
+    nslookup -timeout=2 google.com
+
+- name: nslookup the cluster URL to make sure it can be found
+  shell: >
+    nslookup -timeout=2 {{ kpm_cluster_url.stdout }}

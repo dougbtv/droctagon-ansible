@@ -8,4 +8,5 @@
     # - { role: dougbtv.kpm-install , kpm_version: "v0.21.2" }
     # - { role: openshift-install }
     # - { role: openshift-up }
-    - { role: kpm-registry }
+    # - { role: kpm-registry }
+    - { role: openshift-aio-dns-hack }
