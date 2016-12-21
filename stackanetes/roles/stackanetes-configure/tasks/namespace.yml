@@ -25,6 +25,24 @@
     oc create -f /root/stackanetes-scc.yml
   when: "template_scc.changed or 'stackanetes' not in list_sccs.stdout"
 
+- name: Assign stackanetes SCC to default serviceaccount user 
+  shell: >
+    oc adm policy add-scc-to-user stackanetes -z default
+
+- name: Grant view API privileges to service accounts
+  shell: >
+    oc adm policy add-cluster-role-to-user view {{ item }}
+  with_items:
+    - "system:serviceaccount:{{ stackanetes_namespace }}"
+    - "system:serviceaccount:{{ stackanetes_namespace }}:default"
+
+- name: Add role to admin user for this namespace
+  shell: >
+    oc policy add-role-to-user admin admin -n {{ stackanetes_namespace }}
+
+- name: Begin the deploy dun dun dunnnnnn
+  shell: >
+    kpm deploy stackanetes/stackanetes --namespace {{ stackanetes_namespace }} --variables /root/stackanetes-parameters.yaml -H http://{{ kpm_registry_url }}
 
 # ----------- START HERE
 # Ok, next things up are to check for the 
