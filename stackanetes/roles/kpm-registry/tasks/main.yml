@@ -42,3 +42,24 @@
   shell: > 
     kpm deploy coreos/kpm-registry --namespace kpm -H https://beta.kpm.sh
   when: kpm_namespace.changed
+
+- name: Always switch to kpm namespace
+  command: >
+    oc project kpm
+
+- name: Get kpm registry pod name
+  shell: >
+    oc get pods | awk '/kpm-registry/ {print $1}'
+  register: kpm_pod_name
+
+- name: Get kpm cluster URL
+  shell: >
+    oc describe pod {{ kpm_pod_name.stdout }} | grep KPM_URI | awk '{print $2}' | perl -p -i -e 's|^https?://(.+)$|$1|'
+  register: kpm_cluster_url
+
+- name: Set kpm cluster URL as fact
+  set_fact: 
+    kpm_registry_url: "{{ kpm_cluster_url.stdout }}"
+
+- debug:
+    msg: "The KPM registry is @ {{ kpm_registry_url }}"
