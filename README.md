@@ -14,6 +14,10 @@ Right now it's a set of Ansible roles and playbooks for getting OpenStack up and
 
 I have a lot bigger plans for what I'd like to do with it, so, expect to find a variety of samples of how to re-mix containerized NFV solutions to come here.
 
+## Dr. Octagon network diagram
+
+![network diagram](http://i.imgur.com/fOuY47j.png)
+
 ## Using the playbooks
 
 ```
