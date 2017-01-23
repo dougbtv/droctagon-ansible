@@ -1,8 +1,8 @@
 # Default profile flavors: compute, control, swift-storage, ceph-storage,boot_option:local and block-storage
-
+bifrost: true
 instacklist: 
   # ------------------------------- has network cable to backbone.
-  - pm_addr: 192.168.1.10 
+  - pm_addr: 192.168.1.10
     mac: "00:25:90:49:55:C6"
     cpu: 2
     memory: 48130
@@ -10,9 +10,9 @@ instacklist:
     arch: x86_64
     pm_user: stack
     pm_password: redhatz
-    capabilities: "profile:ceph-storage,boot_option:local"
+    # capabilities: "profile:ceph-storage,boot_option:local"
 
-  - pm_addr: 192.168.1.11 
+  - pm_addr: 192.168.1.11
     mac: "00:25:90:49:54:6C"
     cpu: 2
     memory: 48130
@@ -21,10 +21,10 @@ instacklist:
     pm_user: stack
     pm_password: redhatz
     # was extra control.
-    capabilities: "profile:compute,boot_option:local"
+    # capabilities: "profile:compute,boot_option:local"
 
   # ------------------------------- didn't wanna boot one time, worth another try at some point.
-  - pm_addr: 192.168.1.12 
+  - pm_addr: 192.168.1.12
     mac: "00:25:90:49:54:6E"
     cpu: 2
     memory: 48130
@@ -32,7 +32,7 @@ instacklist:
     arch: x86_64
     pm_user: stack
     pm_password: redhatz
-    capabilities: "profile:compute,boot_option:local"
+    # capabilities: "profile:compute,boot_option:local"
 
   # # ------------------------------- undercloud.
   # # - pm_addr: 192.168.1.13 

@@ -1,0 +1,5 @@
+---
+- name: template instackenv.json
+  template: 
+    src: instackenv.json.j2
+    dest: /root/inventory.json

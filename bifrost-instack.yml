@@ -1,5 +1,5 @@
 ---
-- hosts: undercloud
+- hosts: bifrost
   vars_files:
     - vars/bifrost-instack.yml
   tasks: []
