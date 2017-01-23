@@ -1,0 +1,8 @@
+---
+- hosts: undercloud
+  vars_files:
+    - vars/bifrost-instack.yml
+  tasks: []
+  roles:
+    - { role: instackenv }
+    

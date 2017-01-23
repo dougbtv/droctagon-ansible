@@ -1,0 +1,89 @@
+# Default profile flavors: compute, control, swift-storage, ceph-storage,boot_option:local and block-storage
+
+instacklist: 
+  # ------------------------------- has network cable to backbone.
+  - pm_addr: 192.168.1.10 
+    mac: "00:25:90:49:55:C6"
+    cpu: 2
+    memory: 48130
+    disk: 1000
+    arch: x86_64
+    pm_user: stack
+    pm_password: redhatz
+    capabilities: "profile:ceph-storage,boot_option:local"
+
+  - pm_addr: 192.168.1.11 
+    mac: "00:25:90:49:54:6C"
+    cpu: 2
+    memory: 48130
+    disk: 64
+    arch: x86_64
+    pm_user: stack
+    pm_password: redhatz
+    # was extra control.
+    capabilities: "profile:compute,boot_option:local"
+
+  # ------------------------------- didn't wanna boot one time, worth another try at some point.
+  - pm_addr: 192.168.1.12 
+    mac: "00:25:90:49:54:6E"
+    cpu: 2
+    memory: 48130
+    disk: 64
+    arch: x86_64
+    pm_user: stack
+    pm_password: redhatz
+    capabilities: "profile:compute,boot_option:local"
+
+  # # ------------------------------- undercloud.
+  # # - pm_addr: 192.168.1.13 
+  # #   mac: "00:25:90:2F:03:DC"
+  # #   cpu: 2
+  # #   memory: 48130
+  # #   disk: 64
+  # #   arch: x86_64
+  # #   pm_user: stack
+  # #   pm_password: redhatz
+
+  # - pm_addr: 192.168.1.14 
+  #   mac: "00:25:90:2F:0A:9C"
+  #   cpu: 2
+  #   memory: 48130
+  #   disk: 1000
+  #   arch: x86_64
+  #   pm_user: stack
+  #   pm_password: redhatz
+  #   capabilities: "profile:ceph-storage,boot_option:local"
+
+  # - pm_addr: 192.168.1.15 
+  #   mac: "00:25:90:2F:0A:DA"
+  #   cpu: 2
+  #   memory: 48130
+  #   disk: 64
+  #   arch: x86_64
+  #   pm_user: stack
+  #   pm_password: redhatz
+  #   capabilities: "profile:control,boot_option:local"
+
+  # # ---------------------------------- bad cable on external port?
+  # # - pm_addr: 192.168.1.16 
+  # #   mac: "00:25:90:48:B8:44"
+  # #   cpu: 2
+  # #   memory: 48130
+  # #   disk: 64
+  # #   arch: x86_64
+  # #   pm_user: stack
+  # #   pm_password: redhatz
+  # #   capabilities: "profile:compute,boot_option:local"
+
+  # - pm_addr: 192.168.1.17 
+  #   mac: "00:25:90:49:55:A6"
+  #   cpu: 2
+  #   memory: 48130
+  #   disk: 120
+  #   arch: x86_64
+  #   pm_user: stack
+  #   pm_password: redhatz
+  #   capabilities: "profile:compute,boot_option:local"
+  #   # This box has a USB stick in here, so we need to specify the root device.
+  #   # Here I use the serial number.
+  #   root_device: PNY39162193120100CF2
