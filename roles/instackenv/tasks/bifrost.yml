@@ -1,5 +1,5 @@
 ---
-- name: template instackenv.json
+- name: template bifrost-inventory.json
   template: 
-    src: instackenv.json.j2
+    src: bifrost-inventory.json.j2
     dest: /root/inventory.json

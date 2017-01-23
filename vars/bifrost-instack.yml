@@ -3,6 +3,7 @@ bifrost: true
 instacklist: 
   # ------------------------------- has network cable to backbone.
   - pm_addr: 192.168.1.10
+    nickname: "droctagon4"
     mac: "00:25:90:49:55:C6"
     cpu: 2
     memory: 48130
@@ -10,9 +11,12 @@ instacklist:
     arch: x86_64
     pm_user: stack
     pm_password: redhatz
+    ip_address: 192.168.1.50
+    uuid: 9e9c3031-2200-4a5a-a772-843780f40079
     # capabilities: "profile:ceph-storage,boot_option:local"
 
   - pm_addr: 192.168.1.11
+    nickname: "droctagon3"
     mac: "00:25:90:49:54:6C"
     cpu: 2
     memory: 48130
@@ -20,11 +24,14 @@ instacklist:
     arch: x86_64
     pm_user: stack
     pm_password: redhatz
+    ip_address: 192.168.1.51
+    uuid: 4df31443-763d-43de-a4fe-2a0e6aa68679
     # was extra control.
     # capabilities: "profile:compute,boot_option:local"
 
   # ------------------------------- didn't wanna boot one time, worth another try at some point.
   - pm_addr: 192.168.1.12
+    nickname: "droctagon2"
     mac: "00:25:90:49:54:6E"
     cpu: 2
     memory: 48130
@@ -32,6 +39,8 @@ instacklist:
     arch: x86_64
     pm_user: stack
     pm_password: redhatz
+    ip_address: 192.168.1.52
+    uuid: 59177aad-d8be-4ce1-968b-9bc4718c5533
     # capabilities: "profile:compute,boot_option:local"
 
   # # ------------------------------- undercloud.

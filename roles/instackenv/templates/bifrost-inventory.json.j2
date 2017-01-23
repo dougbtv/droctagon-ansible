@@ -1,0 +1,28 @@
+{
+  {% for instack in instacklist %}"{{ instack.nickname }}": {
+    "uuid": "{{ instack.uuid }}",
+    "driver_info": {
+      "power": {
+        "ipmi_username": "{{ instack.pm_user }}",
+        "ipmi_address": "{{ instack.pm_addr }}",
+        "ipmi_password": "{{ instack.pm_password }}"
+      }
+    },
+    "nics": [
+      {
+        "mac": "{{ instack.mac }}"
+      }
+    ],
+    "driver": "agent_ipmitool",
+    "ipv4_address": "{{ instack.ip_address }}",
+    "properties": {
+      "cpu_arch": "x86_64",
+      "ram": "{{ instack.memory }}",
+      "disk_size": "{{ instack.disk }}",
+      "cpus": "{{ instack.cpu }}"
+    },
+    "name": "{{ instack.nickname }}"
+  }{% if not loop.last %},
+  {% endif %}
+  {% endfor %}
+}
