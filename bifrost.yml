@@ -4,5 +4,6 @@
     - vars/bifrost-instack.yml
   tasks: []
   roles:
-    - { role: bifrost-inventory }
+    # - { role: bifrost-inventory }
+    - { role: bifrost-install }
     

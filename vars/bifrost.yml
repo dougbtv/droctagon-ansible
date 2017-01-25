@@ -1,5 +1,5 @@
-# Default profile flavors: compute, control, swift-storage, ceph-storage,boot_option:local and block-storage
 bifrost: true
+
 instacklist: 
   # ------------------------------- has network cable to backbone.
   # - pm_addr: 192.168.1.10

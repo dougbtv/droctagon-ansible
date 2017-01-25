@@ -1,0 +1,32 @@
+---
+
+- name: Enable EPEL
+  yum:
+    name: epel-release
+    state: present
+
+- name: Install deps
+  yum: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git
+
+- name: Wipe bifrost clone
+  file:
+    path: /usr/src/bifrost
+    state: absent
+
+- name: Clone bifrost
+  git:
+    repo: https://git.openstack.org/openstack/bifrost.git
+    dest: /usr/src/bifrost
+    version: master
+
+# Create a 2048-bit SSH key for user jsmith in ~jsmith/.ssh/id_rsa
+- name: Generate a an SSH key for root
+  user:
+    name: root
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
