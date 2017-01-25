@@ -1,0 +1,45 @@
+---
+# A suite of things to do after bifrost is installed.
+# ...such as configuring ironic.
+
+- name: Disable firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+
+# Why not template?
+# ...this file is already quite customized, with things we don't yet customize.
+
+- name: Remove pxe_amt from ironic.conf
+  lineinfile:
+    dest: /etc/ironic/ironic.conf
+    regexp: 'pxe_amt'
+    state: absent
+
+- name: Add the line with proper enabled_drivers
+  lineinfile:
+    dest: /etc/ironic/ironic.conf
+    regexp: 'agent_ipmitool,agent_ilo,agent_ucs,pxe_ssh,pxe_ipmitool,pxe_ilo'
+    insertafter: '^enabled_network_interfaces'
+    line: 'enabled_drivers = agent_ipmitool,agent_ilo,agent_ucs,pxe_ssh,pxe_ipmitool,pxe_ilo'
+  register: add_enabled_drivers
+
+- name: Restart ironic services when changing ironic.conf
+  service:
+    name: "{{ item }}"
+    state: restarted
+  when: add_enabled_drivers.changed
+  with_items:
+    - ironic-api
+    - ironic-conductor
+    - ironic-inspector
+
+- name: Ensure ironic services running
+  service:
+    name: "{{ item }}"
+    state: started
+  with_items:
+    - ironic-api
+    - ironic-conductor
+    - ironic-inspector

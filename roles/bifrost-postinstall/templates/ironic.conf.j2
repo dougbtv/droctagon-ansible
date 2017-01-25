@@ -1,0 +1,56 @@
+# Ansible managed: /usr/src/bifrost/playbooks/roles/bifrost-ironic-install/templates/ironic.conf.j2 modified on 2017-01-25 16:28:03 by root on nocbox
+# For additional details on configuring ironic, you may wish to reference
+# the sample configuration file which can be located at
+# http://git.openstack.org/cgit/openstack/ironic/tree/etc/ironic/ironic.conf.sample
+
+
+[DEFAULT]
+# NOTE(TheJulia): Until Bifrost supports neutron or some other network
+# configuration besides a flat network where bifrost orchustrates the
+# control instead of ironic, noop is the only available network driver.
+enabled_network_interfaces = noop
+
+# NFVPE says: This is the original line.
+# enabled_drivers = agent_ipmitool,agent_ilo,agent_ucs,pxe_amt,pxe_ssh,pxe_ipmitool,pxe_ilo
+
+# NFVPE says: This the line we want, removing pxe_amt.
+enabled_drivers = agent_ipmitool,agent_ilo,agent_ucs,pxe_ssh,pxe_ipmitool,pxe_ilo
+debug = false
+
+rabbit_userid = ironic
+rabbit_password = aSecretPassword473z
+
+auth_strategy = noauth
+
+[pxe]
+pxe_append_params = systemd.journald.forward_to_console=yes 
+pxe_config_template = $pybasedir/drivers/modules/ipxe_config.template
+tftp_server = 192.168.10.10
+tftp_root = /tftpboot
+pxe_bootfile_name = undionly.kpxe
+ipxe_enabled = true
+ipxe_boot_script = /etc/ironic/boot.ipxe
+
+[deploy]
+http_url = http://192.168.10.10:8080/
+http_root = /httpboot
+
+[conductor]
+api_url = http://192.168.10.10:6385/
+clean_nodes = false
+automated_clean = false
+
+[database]
+connection = mysql+pymysql://ironic:aSecretPassword473z@localhost/ironic?charset=utf8
+
+[dhcp]
+dhcp_provider = none
+
+
+
+[ilo]
+use_web_server_for_images = true
+
+[inspector]
+enabled = true
+
