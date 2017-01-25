@@ -1,6 +1,29 @@
 ---
-- include: vanilla.yaml
-  when: "bifrost is undefined or not bifrost"
+- name: template instackenv.json
+  template: 
+    src: instackenv.json.j2
+    dest: /home/stack/instackenv.json
 
-- include: bifrost.yml
-  when: "bifrost is defined and bifrost"
+- name: Import instackenv.json
+  shell: "source /home/stack/stackrc && openstack baremetal import instackenv.json"
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+
+- name: Wait 30 seconds for nodes to register with ironic.
+  pause: seconds=30
+
+- name: Baremetal configure boot.
+  shell: "source /home/stack/stackrc && openstack baremetal configure boot --root-device-minimum-size 40"
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
+
+- name: Start introspection
+  shell: "source /home/stack/stackrc && openstack baremetal introspection bulk start"
+  args: 
+    chdir: "/home/stack"
+  become: true
+  become_user: stack
