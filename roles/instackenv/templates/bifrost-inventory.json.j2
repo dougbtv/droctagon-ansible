@@ -13,7 +13,14 @@
         "mac": "{{ instack.mac }}"
       }
     ],
+    {% if instack.custom_image is defined %}
+    "instance_info": {
+      "image_source": "http://192.168.10.10:8080/centos_generic.qcow2",
+      "image_checksum": "c116607a31b1ef83dbd0afc46e8e6bd9"
+    },
+    {% endif %}
     "driver": "agent_ipmitool",
+    "ipv4_address": "{{ instack.ip_address }}",
     "properties": {
       "cpu_arch": "x86_64",
       "ram": "{{ instack.memory }}",

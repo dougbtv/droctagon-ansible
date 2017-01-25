@@ -43,6 +43,7 @@ instacklist:
     uuid: 59177aad-d8be-4ce1-968b-9bc4718c5533
     root_device_type: "model"
     root_device: "Crucial_CT256M55"
+    # custom_image: true
     # capabilities: "profile:compute,boot_option:local"
 
   # # ------------------------------- undercloud.
