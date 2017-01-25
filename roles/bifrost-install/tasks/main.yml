@@ -1,4 +1,7 @@
 ---
+# Steps primarily learned from:
+# http://docs.openstack.org/developer/bifrost/readme.html
+# ...up to the end of the "installation" section.
 
 - name: Enable EPEL
   yum:
@@ -11,8 +14,12 @@
     state: present
   with_items:
     - git
+    - mlocate
 
-# Create a 2048-bit SSH key for user jsmith in ~jsmith/.ssh/id_rsa
+- name: Disable selinux
+  selinux:
+    state: disabled
+
 - name: Generate a an SSH key for root
   user:
     name: root
@@ -38,3 +45,38 @@
   with_items:
     - baremetal
     - localhost
+    - target
+
+- name: Run the env setup script
+  shell: >
+    bash /usr/src/bifrost/scripts/env-setup.sh
+  args:
+    creates: /etc/.bifrost-env-setup
+
+- name: Mark env setup complete
+  file: 
+    path: /etc/.bifrost-env-setup
+    state: directory
+
+- name: Source ansible env-setup
+  shell: >
+    source /opt/stack/ansible/hacking/env-setup
+  args:
+    creates: /etc/.ansible-env-setup
+
+- name: Mark env setup complete
+  file: 
+    path: /etc/.ansible-env-setup
+    state: directory
+
+- name: Annnnd! We run the installation playbook.
+  shell: >
+    ansible-playbook -i inventory/target install.yaml
+  args:
+    chdir: /usr/src/bifrost/playbooks
+    creates: /etc/.bifrost-installed
+
+- name: Mark bifrost install complete
+  file: 
+    path: /etc/.bifrost-installed
+    state: directory
