@@ -18,7 +18,10 @@
       "cpu_arch": "x86_64",
       "ram": "{{ instack.memory }}",
       "disk_size": "{{ instack.disk }}",
-      "cpus": "{{ instack.cpu }}"
+      "cpus": "{{ instack.cpu }}",
+      "root_device": {
+        "{{ instack.root_device_type }}": "{{ instack.root_device }}"
+      }
     },
     "name": "{{ instack.nickname }}"
   }{% if not loop.last %},

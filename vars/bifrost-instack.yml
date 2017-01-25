@@ -35,15 +35,29 @@ instacklist:
     mac: "00:25:90:49:54:6E"
     cpu: 2
     memory: 48130
-    disk: 64
+    disk: 256
     arch: x86_64
     pm_user: stack
     pm_password: redhatz
     ip_address: 192.168.1.155
     uuid: 59177aad-d8be-4ce1-968b-9bc4718c5533
+    root_device_type: "model"
+    root_device: "Crucial_CT256M55"
     # capabilities: "profile:compute,boot_option:local"
 
   # # ------------------------------- undercloud.
+  # [root@nocbox playbooks]# lsblk -okname,serial,wwn 
+  # KNAME SERIAL               WWN
+  # sda   PNY39162193120100D68 0x5f8db4c391600d68
+  # sda1                       0x5f8db4c391600d68
+  # sda2                       0x5f8db4c391600d68
+  # sda3                       0x5f8db4c391600d68
+  # sda4                       0x5f8db4c391600d68
+  # sda5                       0x5f8db4c391600d68
+  # sdb   373BA38F             
+  # sdb1                       
+  # sdb2                       
+
   # # - pm_addr: 192.168.1.13 
   # #   mac: "00:25:90:2F:03:DC"
   # #   cpu: 2
@@ -73,16 +87,15 @@ instacklist:
   #   pm_password: redhatz
   #   capabilities: "profile:control,boot_option:local"
 
-  # # ---------------------------------- bad cable on external port?
-  # # - pm_addr: 192.168.1.16 
-  # #   mac: "00:25:90:48:B8:44"
-  # #   cpu: 2
-  # #   memory: 48130
-  # #   disk: 64
-  # #   arch: x86_64
-  # #   pm_user: stack
-  # #   pm_password: redhatz
-  # #   capabilities: "profile:compute,boot_option:local"
+  # - pm_addr: 192.168.1.16 
+  #   mac: "00:25:90:48:B8:44"
+  #   cpu: 2
+  #   memory: 48130
+  #   disk: 64
+  #   arch: x86_64
+  #   pm_user: stack
+  #   pm_password: redhatz
+  #   capabilities: "profile:compute,boot_option:local"
 
   # - pm_addr: 192.168.1.17 
   #   mac: "00:25:90:49:55:A6"
@@ -90,9 +103,13 @@ instacklist:
   #   memory: 48130
   #   disk: 120
   #   arch: x86_64
+  #   nickname: droctagon5
   #   pm_user: stack
   #   pm_password: redhatz
   #   capabilities: "profile:compute,boot_option:local"
+  #   uuid: 53d0b92b-339b-46a6-8b98-be975a4f06fb
+  #   ip_address: 192.168.1.156
   #   # This box has a USB stick in here, so we need to specify the root device.
   #   # Here I use the serial number.
+  #   root_device_type: serial
   #   root_device: PNY39162193120100CF2
