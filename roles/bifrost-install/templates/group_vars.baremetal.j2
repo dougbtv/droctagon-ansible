@@ -1,15 +1,17 @@
 ---
+# Note: Doug changed the curly braces in comments to square braces, because... ansible.
+
 # The ironic API URL for bifrost operations.  Defaults to localhost.
-# ironic_url: "http://localhost:6385/"
+ironic_url: "http://{{ pxe_boot_server_ip }}:6385/"
 
 # The network interface that bifrost will be operating on.  Defaults
 # to virbr0 in roles, can be overridden here.
-# network_interface: "virbr0"
+network_interface: "{{ pxe_boot_nic }}"
 
 # The path to the SSH key to be utilized for testing and burn-in
 # to configuration drives. When set, it should be set in both baremetal
 # and localhost groups, however this is only an override to the default.
-# ssh_public_key_path: "{{ ansible_env.HOME }}/.ssh/id_rsa.pub"
+ssh_public_key_path: "/root/.ssh/id_rsa.pub"
 
 # Normally this user should be root, however if cirros is used,
 # a user may wish to define a specific user for testing VM
@@ -24,10 +26,10 @@ testing_user: root
 # IPA Image parameters.  If these are changed, they must be changed in
 # Both localhost and baremetal groups.  Presently the defaults
 # in each role should be sufficent for proper operation.
-# ipa_kernel: "{{http_boot_folder}}/coreos_production_pxe.vmlinuz"
-# ipa_ramdisk: "{{http_boot_folder}}/coreos_production_pxe_image-oem.cpio.gz"
-# ipa_kernel_url: "http://{{ hostvars[inventory_hostname]['ansible_' + network_interface]['ipv4']['address'] }}:{{file_url_port}}/coreos_production_pxe.vmlinuz"
-# ipa_ramdisk_url: "http://{{ hostvars[inventory_hostname]['ansible_' + network_interface]['ipv4']['address'] }}:{{file_url_port}}/coreos_production_pxe_image-oem.cpio.gz"
+# ipa_kernel: "[[http_boot_folder]]/coreos_production_pxe.vmlinuz"
+# ipa_ramdisk: "[[http_boot_folder]]/coreos_production_pxe_image-oem.cpio.gz"
+# ipa_kernel_url: "http://[[ hostvars[inventory_hostname]['ansible_' + network_interface]['ipv4']['address'] ]]:[[file_url_port]]/coreos_production_pxe.vmlinuz"
+# ipa_ramdisk_url: "http://[[ hostvars[inventory_hostname]['ansible_' + network_interface]['ipv4']['address'] ]]:[[file_url_port]]/coreos_production_pxe_image-oem.cpio.gz"
 
 # The http_boot_folder defines the root folder for the webserver.
 # If this setting is changed, it must be applied to both the baremetal
@@ -41,7 +43,7 @@ testing_user: root
 # disk, then the image generation will not take place, otherwise an image
 # will be generated using diskimage-builder.
 # deploy_image_filename: "deployment_image.qcow2"
-# deploy_image: "{{http_boot_folder}}/{{deploy_image_filename}}"
+# deploy_image: "[[http_boot_folder]]/[[deploy_image_filename]]"
 
 # Under normal circumstances, the os_ironic_node module does not wait for
 # the node to reach active state before continuing with the deployment

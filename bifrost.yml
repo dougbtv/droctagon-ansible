@@ -1,7 +1,7 @@
 ---
 - hosts: bifrost
   vars_files:
-    - vars/bifrost-instack.yml
+    - vars/bifrost.yml
   tasks: []
   roles:
     # - { role: bifrost-inventory }

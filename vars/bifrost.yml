@@ -1,5 +1,6 @@
 bifrost: true
-
+pxe_boot_nic: enp1s0f0
+pxe_boot_server_ip: "192.168.1.108"
 instacklist: 
   # ------------------------------- has network cable to backbone.
   # - pm_addr: 192.168.1.10
