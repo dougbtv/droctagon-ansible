@@ -1,36 +1,36 @@
 {
-  {% for instack in instacklist %}"{{ instack.nickname }}": {
-    "uuid": "{{ instack.uuid }}",
+  {% for inv in bifrost_inventory %}"{{ inv.nickname }}": {
+    "uuid": "{{ inv.uuid }}",
     "driver_info": {
       "power": {
-        "ipmi_username": "{{ instack.pm_user }}",
-        "ipmi_address": "{{ instack.pm_addr }}",
-        "ipmi_password": "{{ instack.pm_password }}"
+        "ipmi_username": "{{ inv.pm_user }}",
+        "ipmi_address": "{{ inv.pm_addr }}",
+        "ipmi_password": "{{ inv.pm_password }}"
       }
     },
     "nics": [
       {
-        "mac": "{{ instack.mac }}"
+        "mac": "{{ inv.mac }}"
       }
     ],
-    {% if instack.custom_image is defined %}
+    {% if inv.custom_image is defined %}
     "instance_info": {
       "image_source": "http://192.168.10.10:8080/centos_generic.qcow2",
       "image_checksum": "c116607a31b1ef83dbd0afc46e8e6bd9"
     },
     {% endif %}
     "driver": "agent_ipmitool",
-    "ipv4_address": "{{ instack.ip_address }}",
+    "ipv4_address": "{{ inv.ip_address }}",
     "properties": {
       "cpu_arch": "x86_64",
-      "ram": "{{ instack.memory }}",
-      "disk_size": "{{ instack.disk }}",
-      "cpus": "{{ instack.cpu }}",
+      "ram": "{{ inv.memory }}",
+      "disk_size": "{{ inv.disk }}",
+      "cpus": "{{ inv.cpu }}",
       "root_device": {
-        "{{ instack.root_device_type }}": "{{ instack.root_device }}"
+        "{{ inv.root_device_type }}": "{{ inv.root_device }}"
       }
     },
-    "name": "{{ instack.nickname }}"
+    "name": "{{ inv.nickname }}"
   }{% if not loop.last %},
   {% endif %}
   {% endfor %}
