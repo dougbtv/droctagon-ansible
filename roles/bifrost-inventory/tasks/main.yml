@@ -4,4 +4,44 @@
     src: bifrost-inventory.json.j2
     dest: "{{ bifrost_inventory_path }}"
 
+# Unsure if I'll really need this, but, for now.
+- name: Get enrolled inventory
+  shell: >
+    ironic node-list
+  environment: "{{ bifrost_env }}"
+  register: enrolled_inventory
 
+- name: Start enrollment, enroll everything every time.
+  shell: >
+    ansible-playbook -i inventory/bifrost_inventory.py enroll-dynamic.yaml
+  args:
+    chdir: /usr/src/bifrost/playbooks
+  environment: "{{ bifrost_env }}"
+
+- name: Set root device for each inventory item, every time.
+  shell: >
+    ironic node-update {{ item.uuid }} add properties/root_device='{"{{ item.root_device_type }}": "{{ item.root_device }}"}'
+  with_items: "{{ bifrost_inventory }}"
+  environment: "{{ bifrost_env }}"
+
+# - name: Now give the deployment command
+#   debug:
+#     msg: "cd /usr/src/bifrost/playbooks && export BIFROST_INVENTORY_SOURCE= && ansible-playbook -vvvv -i inventory/bifrost_inventory.py deploy-dynamic.yaml"
+
+- name: Kick off the deployment
+  shell: >
+    ansible-playbook -vvvv -i inventory/bifrost_inventory.py deploy-dynamic.yaml
+  args:
+    chdir: /usr/src/bifrost/playbooks
+  environment: "{{ bifrost_env }}"
+
+
+# - debug: "msg={{ enrolled_inventory.stdout }}"
+
+# - name: Check the BIFROST_INVENTORY_SOURCE
+#   shell: >
+#     echo $BIFROST_INVENTORY_SOURCE
+#   environment: "{{ bifrost_env }}"
+#   register: checksource
+
+# - debug: "msg={{ checksource.stdout }}"

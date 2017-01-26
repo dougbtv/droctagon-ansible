@@ -2,6 +2,11 @@
 - hosts: bifrost
   vars_files:
     - vars/bifrost.yml
+  vars:
+    bifrost_env:
+        IRONIC_URL: "http://localhost:6385/"
+        OS_AUTH_TOKEN: "fake-token"
+        BIFROST_INVENTORY_SOURCE: "{{ bifrost_inventory_path }}"
   tasks: []
   roles:
     # - { role: bifrost-install }
