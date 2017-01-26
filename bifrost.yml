@@ -4,6 +4,6 @@
     - vars/bifrost.yml
   tasks: []
   roles:
-    # - { role: bifrost-inventory }
     # - { role: bifrost-install }
-    - { role: bifrost-postinstall }
+    # - { role: bifrost-postinstall }
+    - { role: bifrost-inventory }

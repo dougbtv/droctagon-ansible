@@ -2,4 +2,6 @@
 - name: template bifrost-inventory.json
   template: 
     src: bifrost-inventory.json.j2
-    dest: /root/inventory.json
+    dest: "{{ bifrost_inventory_path }}"
+
+
