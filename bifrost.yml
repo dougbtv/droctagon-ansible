@@ -10,5 +10,5 @@
   tasks: []
   roles:
     # - { role: bifrost-install }
-    # - { role: bifrost-postinstall }
-    - { role: bifrost-inventory }
+    - { role: bifrost-postinstall }
+    # - { role: bifrost-inventory }

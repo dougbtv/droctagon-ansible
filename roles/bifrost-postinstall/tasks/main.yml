@@ -50,3 +50,31 @@
     - ironic-api
     - ironic-conductor
     - ironic-inspector
+
+# dhcp-range=192.168.10.50,192.168.10.100,12h
+- name: Ensure default DHCP range line is missing from dnsmasq.conf
+  lineinfile:
+    dest: /etc/dnsmasq.conf
+    regexp: 'dhcp-range=192.168.1.200,192.168.1.250,12h'
+    state: absent
+
+
+- name: Add the line with proper DHCP range to dnsmasq
+  lineinfile:
+    dest: /etc/dnsmasq.conf
+    regexp: '{{ pxe_dhcp_start }},{{ pxe_dhcp_end }}'
+    line: 'dhcp-range={{ pxe_dhcp_start }},{{ pxe_dhcp_end }},12h'
+  register: add_dhcp_range
+
+- name: Restart dnsmasq when adding dhcp range
+  service:
+    name: dnsmasq
+    state: restarted
+  when: add_dhcp_range.changed
+
+- name: Ensure dnsmasq is running, always
+  service:
+    name: dnsmasq
+    state: started
+
+  
