@@ -51,6 +51,7 @@ ssh_public_key_path: "/root/.ssh/id_rsa.pub"
 
 # Setting to utilize diskimage-builder to create a bootable image.
 create_image_via_dib: true
+dib_os_element: "centos7"
 
 # Transform boot image is intended for use with the Ubuntu trusty image.
 # It makes the image bootable by installing Grub.
@@ -58,7 +59,7 @@ create_image_via_dib: true
 transform_boot_image: false
 
 # Create IPA image instead of downloading an pre-made CoreOS IPA image.
-create_ipa_image: false
+create_ipa_image: true
 
 # Dnsmasq default route for clients. If not defined, dnsmasq will push to
 # clients as default route the same IP of the dnsmasq server.
