@@ -9,6 +9,6 @@
         BIFROST_INVENTORY_SOURCE: "{{ bifrost_inventory_path }}"
   tasks: []
   roles:
-    - { role: bifrost-install }
+    # - { role: bifrost-install }
     - { role: bifrost-postinstall }
     - { role: bifrost-inventory }

@@ -19,20 +19,20 @@ bifrost_inventory:
   #   uuid: 9e9c3031-2200-4a5a-a772-843780f40079
   #   # capabilities: "profile:ceph-storage,boot_option:local"
 
-  # - pm_addr: 192.168.1.11
-  #   nickname: "droctagon3"
-  #   mac: "00:25:90:49:54:6C"
-  #   cpu: 2
-  #   memory: 48130
-  #   disk: 64
-  #   arch: x86_64
-  #   pm_user: stack
-  #   pm_password: redhatz
-  #   ip_address: 192.168.1.156
-  #   uuid: 4df31443-763d-43de-a4fe-2a0e6aa68679
-  #   root_device_type: "model"
-  #   # Full device line in bios was: "SanDisk SD6SB1M064G1022I"
-  #   root_device: "SD6SB1M064G1022I"
+  - pm_addr: 192.168.1.11
+    nickname: "droctagon3"
+    mac: "00:25:90:49:54:6C"
+    cpu: 2
+    memory: 48130
+    disk: 64
+    arch: x86_64
+    pm_user: stack
+    pm_password: redhatz
+    # ip_address: 192.168.1.156
+    uuid: 4df31443-763d-43de-a4fe-2a0e6aa68679
+    root_device_type: "model"
+    # Full device line in bios was: "SanDisk SD6SB1M064G1022I"
+    root_device: "SanDisk SD6SB1M0"
 
   # ------------------------------- didn't wanna boot one time, worth another try at some point.
   - pm_addr: 192.168.1.12
@@ -44,7 +44,7 @@ bifrost_inventory:
     arch: x86_64
     pm_user: stack
     pm_password: redhatz
-    ip_address: 192.168.1.155
+    # ip_address: 192.168.1.155
     uuid: 59177aad-d8be-4ce1-968b-9bc4718c5533
     root_device_type: "model"
     root_device: "Crucial_CT256M55"

@@ -20,7 +20,9 @@
     },
     {% endif %}
     "driver": "agent_ipmitool",
+    {% if inv.ip_address is defined %}
     "ipv4_address": "{{ inv.ip_address }}",
+    {% endif %}
     "properties": {
       "cpu_arch": "x86_64",
       "ram": "{{ inv.memory }}",
